@@ -1,0 +1,25 @@
+version: "3" # composeファイルのバージョン
+services:
+    api:
+        # サービス名(プロジェクト側)
+        build: ./build/go/ # ビルドに使うDockerfileの場所
+        tty: true # コンテナ永続化の設定
+        volumes:
+            - ./api:/go/src/api # マウントディレクトリ
+        ports:
+            - '8080:8080'
+
+    mysql:
+        build: ./build/db/
+        volumes:
+            - ./docker/db/data:/var/lib/mysql
+        ports:
+            - 3306:3306
+        environment:
+        ######################テスト開発用！本番上げるな！#################
+            - MYSQL_ROOT_PASSWORD=rootpass
+            - MYSQL_DATABASE=todo
+            - MYSQL_USER=test_user
+            - MYSQL_PASSWORD=pass
+        platform: linux/amd64
+        command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --default-time-zone=Asia/Tokyo

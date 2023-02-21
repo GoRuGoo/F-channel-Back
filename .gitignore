@@ -1,0 +1,5 @@
+api/tmp/
+data/
+memo/
+.DS_Store
+docker/

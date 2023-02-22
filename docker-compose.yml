@@ -18,7 +18,7 @@ services:
         environment:
         ######################テスト開発用！本番上げるな！#################
             - MYSQL_ROOT_PASSWORD=rootpass
-            - MYSQL_DATABASE=todo
+            - MYSQL_DATABASE=kosen
             - MYSQL_USER=test_user
             - MYSQL_PASSWORD=pass
         platform: linux/amd64

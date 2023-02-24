@@ -4,6 +4,7 @@ import (
 	"api/manipulatedb"
 	"database/sql"
 	"log"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
@@ -21,6 +22,11 @@ func main() {
 	}
 	r.GET("/article", func(c *gin.Context) {
 		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectDatabase(db)))
+	})
+	r.GET("/article/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		convNum, _ := strconv.Atoi(id)
+		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectSingleDatabase(db, &convNum)))
 	})
 	r.POST("/article/post", func(c *gin.Context) {
 		title := c.PostForm("title")

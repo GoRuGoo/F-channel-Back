@@ -30,7 +30,7 @@ func main() {
 		content := c.PostForm("content")
 		manipulatedb.InsertArticle(db, &title, &nickname, &kosenname, &level, &content)
 	})
-	r.Run()
+	r.Run(":8080")
 
 	defer db.Close()
 }

@@ -22,6 +22,14 @@ func main() {
 	r.GET("/article", func(c *gin.Context) {
 		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectDatabase(db)))
 	})
+	r.POST("/article/post", func(c *gin.Context) {
+		title := c.PostForm("title")
+		nickname := c.PostForm("nick_name")
+		kosenname := c.PostForm("kosen_name")
+		level := c.PostForm("level")
+		content := c.PostForm("content")
+		manipulatedb.InsertArticle(db, &title, &nickname, &kosenname, &level, &content)
+	})
 	r.Run()
 
 	defer db.Close()

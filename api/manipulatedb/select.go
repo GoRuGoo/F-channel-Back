@@ -12,7 +12,7 @@ type Article struct {
 	Title     string    `json:"title"`
 	NickName  string    `json:"nickname"`
 	KosenName string    `json:"kosenname"`
-	Level     string    `json:"level"`
+	Level     int       `json:"level"`
 	Content   string    `json:"content"`
 	Created   time.Time `json:"created"`
 	Modified  time.Time `json:"modified"`

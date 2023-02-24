@@ -3,7 +3,6 @@ package main
 import (
 	"api/manipulatedb"
 	"database/sql"
-	"fmt"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -29,7 +28,7 @@ func main() {
 		kosenname := c.PostForm("kosen_name")
 		level := c.PostForm("level")
 		content := c.PostForm("content")
-		fmt.Println(title, nickname, kosenname, level, content)
+		manipulatedb.InsertArticle(db, &title, &nickname, &kosenname, &level, &content)
 	})
 	r.Run()
 

@@ -21,6 +21,9 @@ type Article struct {
 func SelectDatabase(db *sql.DB) string {
 	return (Article{}).getJsonRow(db)
 }
+func SelectSingleDatabase(db *sql.DB, getRownum *int) string {
+	return (Article{}).getJsonSingleRow(db, &getRownum)
+}
 
 func (a Article) getJsonRow(db *sql.DB) string {
 	jsonData := []Article{}
@@ -47,8 +50,8 @@ func (a Article) getJsonRow(db *sql.DB) string {
 	return string(exportJson)
 }
 
-func (a Article) getJsonSingleRow(db *sql.DB, articleId int) string {
-	err := db.QueryRow("SELECT * FROM article WHERE id = ?", articleId).Scan(&a.PostID, &a.Title, &a.NickName, &a.KosenName, &a.Level, &a.Content, &a.Created, &a.Modified)
+func (a Article) getJsonSingleRow(db *sql.DB, articleId **int) string {
+	err := db.QueryRow("SELECT * FROM article WHERE post_id = ?", **articleId).Scan(&a.PostID, &a.Title, &a.NickName, &a.KosenName, &a.Level, &a.Content, &a.Created, &a.Modified)
 	if err != nil {
 		log.Fatalf("getSingleRow db.QueryRow error:\n%v", err)
 	}

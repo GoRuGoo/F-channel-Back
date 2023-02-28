@@ -3,6 +3,7 @@ package main
 import (
 	"api/manipulatedb"
 	"database/sql"
+	"fmt"
 	"log"
 	"strconv"
 
@@ -29,13 +30,14 @@ func main() {
 		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectSingleDatabase(db, &convNum)))
 	})
 	r.POST("/article/post", func(c *gin.Context) {
-		title := c.PostForm("title")
-		nickname := c.PostForm("nick_name")
-		kosenname := c.PostForm("kosen_name")
-		level := c.PostForm("level")
-		content := c.PostForm("content")
-		manipulatedb.InsertArticle(db, &title, &nickname, &kosenname, &level, &content)
+		var postList manipulatedb.Article
+		if err := c.BindJSON(&postList); err != nil {
+			panic(err)
+		}
+		fmt.Println(postList.Content)
+		manipulatedb.InsertArticle(db, &postList.Title, &postList.NickName, &postList.KosenName, &postList.Level, &postList.Content)
 	})
+
 	r.Run(":8080")
 
 	defer db.Close()

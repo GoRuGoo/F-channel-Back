@@ -4,6 +4,7 @@ import (
 	"api/manipulatedb"
 	"database/sql"
 	"log"
+	"net/http"
 	"strconv"
 
 	"github.com/gin-contrib/cors"
@@ -17,10 +18,14 @@ const (
 
 func main() {
 	r := gin.Default()
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{
-		"http://localhost:3000/",
-	}
+	// corsConfig := cors.DefaultConfig()
+	// corsConfig.AllowOrigins = []string{
+	// 	"http://localhost:3000",
+	// }
+	// r.Use(cors.Default())
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	r.Use(cors.New(config))
 	db, err := sql.Open("mysql", accessPoint)
 	if err != nil {
 		log.Fatalf("first check error:\n%v", err)
@@ -39,9 +44,9 @@ func main() {
 			panic(err)
 		}
 		manipulatedb.InsertArticle(db, &postList.Title, &postList.NickName, &postList.KosenName, &postList.Level, &postList.Content)
+		c.JSON(http.StatusOK, gin.H{"post": "OK"})
 	})
 
 	r.Run(":8080")
-
 	defer db.Close()
 }

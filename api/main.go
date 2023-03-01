@@ -17,7 +17,10 @@ const (
 
 func main() {
 	r := gin.Default()
-	r.Use(cors.Default())
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{
+		"http://localhost:3000/",
+	}
 	db, err := sql.Open("mysql", accessPoint)
 	if err != nil {
 		log.Fatalf("first check error:\n%v", err)

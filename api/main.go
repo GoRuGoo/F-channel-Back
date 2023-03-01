@@ -6,6 +6,7 @@ import (
 	"log"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -16,6 +17,10 @@ const (
 
 func main() {
 	r := gin.Default()
+	corsConfig := cors.DefaultConfig()
+	corsConfig.AllowOrigins = []string{
+		"http://localhost:3000/",
+	}
 	db, err := sql.Open("mysql", accessPoint)
 	if err != nil {
 		log.Fatalf("first check error:\n%v", err)
@@ -29,13 +34,13 @@ func main() {
 		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectSingleDatabase(db, &convNum)))
 	})
 	r.POST("/article/post", func(c *gin.Context) {
-		title := c.PostForm("title")
-		nickname := c.PostForm("nick_name")
-		kosenname := c.PostForm("kosen_name")
-		level := c.PostForm("level")
-		content := c.PostForm("content")
-		manipulatedb.InsertArticle(db, &title, &nickname, &kosenname, &level, &content)
+		var postList manipulatedb.Article
+		if err := c.BindJSON(&postList); err != nil {
+			panic(err)
+		}
+		manipulatedb.InsertArticle(db, &postList.Title, &postList.NickName, &postList.KosenName, &postList.Level, &postList.Content)
 	})
+
 	r.Run(":8080")
 
 	defer db.Close()

@@ -5,7 +5,7 @@ import (
 	"log"
 )
 
-func InsertArticle(db *sql.DB, title, nickName, kosenName *string, level *string, content *string) int64 {
+func InsertArticle(db *sql.DB, title, nickName, kosenName *string, level *int, content *string) int64 {
 	res, err := db.Exec(
 		"INSERT INTO article (title, nick_name,kosen_name,level,content) VALUES (?, ?, ?,?,?)",
 		*title, *nickName, *kosenName, *level, *content,

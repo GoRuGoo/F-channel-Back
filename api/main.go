@@ -3,10 +3,10 @@ package main
 import (
 	"api/manipulatedb"
 	"database/sql"
-	"fmt"
 	"log"
 	"strconv"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -17,6 +17,7 @@ const (
 
 func main() {
 	r := gin.Default()
+	r.Use(cors.Default())
 	db, err := sql.Open("mysql", accessPoint)
 	if err != nil {
 		log.Fatalf("first check error:\n%v", err)
@@ -34,7 +35,6 @@ func main() {
 		if err := c.BindJSON(&postList); err != nil {
 			panic(err)
 		}
-		fmt.Println(postList.Content)
 		manipulatedb.InsertArticle(db, &postList.Title, &postList.NickName, &postList.KosenName, &postList.Level, &postList.Content)
 	})
 

@@ -21,12 +21,6 @@ func InsertArticle(db *sql.DB, title, nickName, kosenName *string, level *int, c
 	return id
 }
 
-type Thred struct {
-	ThredID  int    `json:"thredid"`
-	NickName string `json:"nickname"`
-	Content  string `json:"content"`
-}
-
 func InsertThreds(db *sql.DB, thred_id *int, nickName, content *string) int64 {
 	res, err := db.Exec(
 		"INSERT INTO threds (thred_id,nick_name,content) VALUES (?,?,?)",

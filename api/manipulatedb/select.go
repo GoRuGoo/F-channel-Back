@@ -17,12 +17,23 @@ type Article struct {
 	Created   time.Time `json:"created"`
 	Modified  time.Time `json:"modified"`
 }
+type Thred struct {
+	Id       int       `json:"id"`
+	ThredID  int       `json:"thredid"`
+	NickName string    `json:"nickname"`
+	Content  string    `json:"content"`
+	Created  time.Time `json:"created"`
+	Modified time.Time `json:"modified"`
+}
 
 func SelectDatabase(db *sql.DB) string {
 	return (Article{}).getJsonRow(db)
 }
 func SelectSingleDatabase(db *sql.DB, getRownum *int) string {
 	return (Article{}).getJsonSingleRow(db, &getRownum)
+}
+func SelectThredsDatabase(db *sql.DB) string {
+	return (Thred{}).getThredJsonRow(db)
 }
 
 func (a Article) getJsonRow(db *sql.DB) string {
@@ -60,5 +71,29 @@ func (a Article) getJsonSingleRow(db *sql.DB, articleId **int) string {
 	if err != nil {
 		log.Fatal(err)
 	}
+	return string(exportJson)
+}
+
+func (t Thred) getThredJsonRow(db *sql.DB) string {
+	jsonData := []Thred{}
+
+	rows, err := db.Query("SELECT * FROM threds ")
+	if err != nil {
+		log.Fatalf("connect threds rows fatal:\n%v", err)
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		if err := rows.Scan(&t.Id, &t.ThredID, &t.NickName, &t.Content, &t.Created, &t.Modified); err != nil {
+			log.Fatalf("get threds rosw fatal:\n%v", err)
+		}
+		jsondat_1 := &Thred{Id: t.Id, ThredID: t.ThredID, NickName: t.NickName, Content: t.Content, Created: t.Created, Modified: t.Modified}
+		jsonData = append(jsonData, *jsondat_1)
+	}
+	exportJson, err := json.Marshal(jsonData)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
 	return string(exportJson)
 }

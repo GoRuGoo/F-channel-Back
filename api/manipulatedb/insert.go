@@ -22,8 +22,8 @@ func InsertArticle(db *sql.DB, title, nickName, kosenName *string, level *int, c
 }
 
 type Thred struct {
-	ThredID  int    `json:"thred_id"`
-	NickName string `json:"nick_name"`
+	ThredID  int    `json:"thredid"`
+	NickName string `json:"nickname"`
 	Content  string `json:"content"`
 }
 

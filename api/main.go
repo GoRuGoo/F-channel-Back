@@ -54,8 +54,10 @@ func main() {
 		manipulatedb.InsertThreds(db, &thredList.ThredID, &thredList.NickName, &thredList.Content)
 		c.JSON(http.StatusOK, gin.H{"thred": "ok"})
 	})
-	r.GET("/article/thred", func(c *gin.Context) {
-		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectThredsDatabase((db))))
+	r.GET("/article/thred/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		convNum, _ := strconv.Atoi(id)
+		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectThredsDatabase(db, &convNum)))
 	})
 
 	r.Run(":8080")

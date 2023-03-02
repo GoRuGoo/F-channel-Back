@@ -32,8 +32,8 @@ func SelectDatabase(db *sql.DB) string {
 func SelectSingleDatabase(db *sql.DB, getRownum *int) string {
 	return (Article{}).getJsonSingleRow(db, &getRownum)
 }
-func SelectThredsDatabase(db *sql.DB) string {
-	return (Thred{}).getThredJsonRow(db)
+func SelectThredsDatabase(db *sql.DB, getidnum *int) string {
+	return (Thred{}).getThredJsonRow(db, &getidnum)
 }
 
 func (a Article) getJsonRow(db *sql.DB) string {
@@ -74,26 +74,23 @@ func (a Article) getJsonSingleRow(db *sql.DB, articleId **int) string {
 	return string(exportJson)
 }
 
-func (t Thred) getThredJsonRow(db *sql.DB) string {
+func (t Thred) getThredJsonRow(db *sql.DB, id **int) string {
 	jsonData := []Thred{}
-
-	rows, err := db.Query("SELECT * FROM threds ")
+	rows, err := db.Query("SELECT * FROM threds WHERE thred_id = ?", **id)
 	if err != nil {
-		log.Fatalf("connect threds rows fatal:\n%v", err)
+		log.Fatalf("get row from thred fatal:\n%v", err)
 	}
-	defer rows.Close()
 
 	for rows.Next() {
 		if err := rows.Scan(&t.Id, &t.ThredID, &t.NickName, &t.Content, &t.Created, &t.Modified); err != nil {
-			log.Fatalf("get threds rosw fatal:\n%v", err)
+			log.Fatalf("get rows from thred fatal:\n%v", err)
 		}
 		jsondat_1 := &Thred{Id: t.Id, ThredID: t.ThredID, NickName: t.NickName, Content: t.Content, Created: t.Created, Modified: t.Modified}
 		jsonData = append(jsonData, *jsondat_1)
 	}
 	exportJson, err := json.Marshal(jsonData)
 	if err != nil {
-		log.Fatal(err)
+		log.Fatalf("export json fatal(thred):\n%v", err)
 	}
-	defer rows.Close()
 	return string(exportJson)
 }

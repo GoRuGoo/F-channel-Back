@@ -20,3 +20,20 @@ func InsertArticle(db *sql.DB, title, nickName, kosenName *string, level *int, c
 	}
 	return id
 }
+
+func InsertThreds(db *sql.DB, thred_id *int, nickName, content *string) int64 {
+	res, err := db.Exec(
+		"INSERT INTO threds (thred_id,nick_name,content) VALUES (?,?,?)",
+		*thred_id, *nickName, *content,
+	)
+	if err != nil {
+		log.Fatalf("insertThreds db.Exec error err:%v", err)
+	}
+	id, err := res.LastInsertId()
+
+	if err != nil {
+		log.Fatalf("insertThreds res.LastInsertId error err:%v", err)
+	}
+	return id
+
+}

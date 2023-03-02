@@ -46,6 +46,19 @@ func main() {
 		manipulatedb.InsertArticle(db, &postList.Title, &postList.NickName, &postList.KosenName, &postList.Level, &postList.Content)
 		c.JSON(http.StatusOK, gin.H{"post": "OK"})
 	})
+	r.POST("/article/thred/post", func(c *gin.Context) {
+		var thredList manipulatedb.Thred
+		if err := c.BindJSON(&thredList); err != nil {
+			panic(err)
+		}
+		manipulatedb.InsertThreds(db, &thredList.ThredID, &thredList.NickName, &thredList.Content)
+		c.JSON(http.StatusOK, gin.H{"thred": "ok"})
+	})
+	r.GET("/article/thred/:id", func(c *gin.Context) {
+		id := c.Param("id")
+		convNum, _ := strconv.Atoi(id)
+		c.Data(200, "application/json; charset=utf-8", []byte(manipulatedb.SelectThredsDatabase(db, &convNum)))
+	})
 
 	r.Run(":8080")
 	defer db.Close()
